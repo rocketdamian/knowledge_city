@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/assets/js/readCookie.js"></script>
+    <script>
+      (function() {
+        const authToken = readCookie("auth_token");
+        if (!authToken) {
+          window.location = "/login.html";
+        } else {
+          window.location = "/user.html";
+        }
+      })();
+    </script>
+  </head>
+</html>

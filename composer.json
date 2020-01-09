@@ -1,0 +1,16 @@
+{
+  "require": {
+    "php": ">=7.3",
+    "slim/slim": "^4.4",
+    "slim/psr7": "^1.0",
+    "slim/http": "^1.0",
+    "tuupola/slim-jwt-auth": "^3.4",
+    "vlucas/phpdotenv": "^4.1",
+    "php-di/php-di": "^6.0",
+    "selective/array-reader": "^0.3.0",
+    "selective/basepath": "^0.2.0",
+    "selective/config": "^0.1.1",
+    "cakephp/database": "^4.0",
+    "psr/http-message": "^1.0"
+  }
+}

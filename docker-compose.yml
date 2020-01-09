@@ -1,0 +1,39 @@
+# ./docker-compose.yml
+
+version: "3"
+
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_pw_shh
+      MYSQL_DATABASE: knowledge_city_test
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - .:/app
+  php:
+    image: bitnami/php-fpm:latest
+    ports:
+      - 9000:9000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  apache-api:
+    image: bitnami/apache:latest
+    ports:
+      - 80:8080
+    volumes:
+      - ./apache-vhost/myapp.conf:/vhosts/myapp.conf:ro
+      - .:/app
+    depends_on:
+      - php
+  client:
+    image: nginx
+    ports:
+      - 8000:80
+    volumes:
+      - .:/usr/share/nginx/html

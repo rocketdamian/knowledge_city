@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <title>Login</title>
+    <link href="/assets/styles/login.css" rel="stylesheet" />
+  </head>
+  <body>
+    <form id="loginForm" class="form-signin" onsubmit="login(event);">
+      <img class="mb-4" src="/assets/img/Logo.svg" alt="" width="80%" />
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="username" class="sr-only">Username</label>
+
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <img src="assets/img/user.svg" width="20" />
+          </div>
+        </div>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          placeholder="Username"
+          required
+          autofocus
+        />
+      </div>
+
+      <label for="password" class="sr-only">Password</label>
+
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <img src="assets/img/password.svg" width="20" />
+          </div>
+        </div>
+        <input type="password" class="form-control m-0" id="password" name="password" placeholder="Password" required />
+      </div>
+
+      <div class="checkbox mb-3">
+        <label> <input type="checkbox" value="remember-me" id="rememberMe" /> Remember me </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="/assets/js/readCookie.js"></script>
+
+    <script>
+      function login(event) {
+        event.preventDefault();
+
+        if ($("#rememberMe").is(":checked")) {
+          document.cookie = "user_name=" + $("#username").val();
+          document.cookie = "password=" + $("#password").val();
+        } else {
+          document.cookie = "user_name=" + "";
+          document.cookie = "password=" + "";
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "http://localhost/auth",
+          dataType: "json",
+          data: $("form").serialize(),
+          success: function(response) {
+            if (response.error || !response.token) {
+              alert(response.message);
+              return false;
+            }
+
+            document.cookie = "auth_token=" + response.token;
+
+            window.location = "/user.html";
+          }
+        });
+      }
+
+      (function() {
+        $("#username").val(readCookie("user_name"));
+        $("#password").val(readCookie("password"));
+        if (readCookie("user_name")) $("#rememberMe").attr("checked", true);
+      })();
+    </script>
+  </body>
+</html>
