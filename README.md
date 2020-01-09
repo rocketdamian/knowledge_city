@@ -9,11 +9,11 @@ Requirements
 ```bash
 docker-compose up -d
 ```
-3. Once all container are ready, run to install dependencies on php container.
+3. Once all services are ready, install dependencies on php container.
 ```bash
 docker-compose exec php composer install
 ```
-4. Then run, so seed the db.
+4. Then run, to seed the db.
 ```bash
 docker-compose exec -T db mysql --user=root --password=my_secret_pw_shh < db.sql
 ```
@@ -23,6 +23,9 @@ http://localhost:8000/
 ```
 
 Notes:
+
+Run `docker-compose down` to stop the services.
+
 If you get this error `The server requested authentication method unknown to the client`
 just run again 
 ```bash
