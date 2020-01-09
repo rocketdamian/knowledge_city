@@ -11,7 +11,7 @@ docker-compose up -d
 ```
 3. Once all container are ready, run to install dependencies on php container.
 ```bash
-docker-compose exec knowledge_city_code_test_php_1 composer install
+docker-compose exec php composer install
 ```
 4. Then run, so seed the db.
 ```bash
