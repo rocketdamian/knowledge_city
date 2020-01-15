@@ -9,15 +9,11 @@ Requirements
 ```bash
 docker-compose up -d
 ```
-3. Once all services are ready, install dependencies on php container.
-```bash
-docker-compose exec php composer install
-```
-4. Then run, to seed the db.
+3. Then run, to seed the db.
 ```bash
 docker-compose exec -T db mysql --user=root --password=my_secret_pw_shh < db.sql
 ```
-5. Frontend app should be available at
+4. Frontend app should be available at
 ```bash
 http://localhost:8000/
 ```
