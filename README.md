@@ -18,6 +18,8 @@ docker-compose exec -T db mysql --user=root --password=my_secret_pw_shh < db.sql
 http://localhost:8000/
 ```
 
+Username is `admin` and password is `admin`
+
 Notes:
 
 Run `docker-compose down` to stop the services.
