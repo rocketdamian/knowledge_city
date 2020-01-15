@@ -1,11 +1,8 @@
 <?php
-
-use \Firebase\JWT\JWT;
-
 class User
 {
-  private $connection;
 
+  private $connection;
   private $tableName = "api_users";
 
   public $id;
@@ -13,51 +10,32 @@ class User
   private $password;
   private $token;
 
-  public function __construct(PDO $connection)
+  public function __construct($connection)
   {
     $this->connection = $connection;
   }
 
-  public function __get($name)
+  public function setUser($user)
   {
-    return $this->$name;
-  }
-
-  private function setUser($user) {
-    $this->id = $user->id;
+    $this->id = intval($user->id);
     $this->username = $user->username;
     $this->password = $user->password;
     $this->token = $user->token;
   }
 
-  public function handleAuthToken(String $username, String $password, $remove = false, $set = true)
+  public function updateToken($token = null)
   {
-    // this is not secure but seed users are not hashed
-    $sth = $this->connection->prepare("SELECT * FROM $this->tableName WHERE username = :username AND password = :password");
-    $sth->bindParam("username", $username);
-    $sth->bindParam("password", $password);
+    $tokenToUpdate = !is_null($token) ? $token : $this->token;
+    $sth = $this->connection->prepare("UPDATE $this->tableName SET token = :token  WHERE id = :id");
+    $sth->bindParam("token", $tokenToUpdate);
+    $sth->bindParam("id", $this->id);
     $sth->execute();
-    $user = $sth->fetchObject();
 
-    if (!$user) {
-      return false;
-    } else {
-      $this->setUser($user);
-    }
-
-
-    if ($set) {
-      if ($remove) {
-        $this->token = "";
-      } else {
-        $this->token = JWT::encode(['id' => $this->id, 'username' => $this->username, 'password' => $this->password], $_ENV["JWT_SECRET"], "HS256");
-      }
-
-      $this->updateToken();
-    }
+    $this->token = $token;
   }
 
-  public function fetchUserByToken(String $token) {
+  public function fetchUserByToken(String $token)
+  {
     $sth = $this->connection->prepare("SELECT * FROM $this->tableName WHERE token = :token");
     $sth->bindParam("token", $token);
 
@@ -71,16 +49,9 @@ class User
     }
   }
 
-  public function clearToken() {
+  public function clearToken()
+  {
     $this->token = null;
     $this->updateToken();
-  }
-
-  private function updateToken()
-  {
-    $sth = $this->connection->prepare("UPDATE $this->tableName SET token = :token  WHERE id = :id");
-    $sth->bindParam("token", $this->token);
-    $sth->bindParam("id", $this->id);
-    $sth->execute();
   }
 }

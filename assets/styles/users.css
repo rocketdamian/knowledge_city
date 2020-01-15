@@ -1,0 +1,15 @@
+table {
+  border-top: 1rem solid #e98c3a;
+}
+
+.page-item:first-child .page-link {
+  border-radius: 0;
+}
+
+.page-link {
+  border: none;
+}
+
+.active-page {
+  border-bottom: 2px solid #e98c3a;
+}

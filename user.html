@@ -11,45 +11,37 @@
       crossorigin="anonymous"
     />
 
-    <title>Users</title>
-    <!-- <link href="/assets/styles/login.css" rel="stylesheet" /> -->
+    <title>LMS</title>
+    <link href="/assets/styles/users.css" rel="stylesheet" />
   </head>
   <body>
     <div class="container mt-3">
       <div class="row">
         <div class="col-sm">
-          <h2 class="text-center">User List</h2>
+          <h2 class="text-center mb-3">User List</h2>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Group</th>
-                <th scope="col">Status</th>
-              </tr>
-            </thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
-      <div class="row">
-        <div class="col">
+
+      <div class="row justify-content-md-center">
+        <div class="col-md-auto">
           <nav>
             <ul class="pagination"></ul>
           </nav>
         </div>
       </div>
     </div>
-    <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar fixed-bottom navbar-expand-sm bg-light">
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mx-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#" onclick="logout(event);">Log Out</a>
+            <a class="nav-link text-dark" href="#" onclick="logout(event);">Log Out</a>
           </li>
         </ul>
       </div>
@@ -72,14 +64,24 @@
     <script>
       function renderUsers(users) {
         var userList = "";
-        users.forEach(function(user) {
+        users.forEach(function(user, index) {
           userList += `
-          <tr>
-            <th scope="row">${user.id}</th>
-              <td>${user.first_name}</td>
-              <td>${user.last_name}</td>
-              <td>${user.group}</td>
-              <td>${user.status}</td>
+          <tr class="${index % 2 == 0 ? "bg-light" : "bg-white"}">
+              <th class="border-0 text-right" scope="row" width="100">
+                <img src="/assets/img/Check_green_icon.svg" width="18">
+              </th>
+              <td class="border-0 w-auto">
+                <p class="mb-1">${user.id}</p>
+                <p>
+                  ${user.first_name + " " + user.last_name}
+                </p>
+              </td>
+              <td class="border-0 w-25">
+                <p class="mb-1">...</p>
+                <p>
+                  ${user.group}
+                </p>
+              </td>
             </tr>
           `;
         });
@@ -90,18 +92,18 @@
       function renderPagination(paginationData, currentPage) {
         var pageNumberList = "";
         if (paginationData.page !== 1) {
-          pageNumberList += `<li class="page-item"><a class="page-link" href="#" onclick="functionFetchPage(${currentPage -
-            1})">Previous</a>`;
+          pageNumberList += `<li class="page-item"><a class="page-link text-dark" href="#" onclick="functionFetchPage(${currentPage -
+            1})">&#171; Previous</a>`;
         }
         for (var i = 1; i <= paginationData.totalpages; i++) {
-          pageNumberList += `<li class="page-item  ${
-            currentPage === i ? "active" : ""
-          }"><a class="page-link" href="#" onclick="functionFetchPage(${i})">${i}</a></li>`;
+          pageNumberList += `<li class="page-item ${
+            currentPage === i ? "active-page" : ""
+          }"><a class="page-link text-dark" href="#" onclick="functionFetchPage(${i})">${i}</a></li>`;
         }
 
         if (paginationData.totalpages !== currentPage) {
-          pageNumberList += `<li class="page-item"><a class="page-link" href="#" onclick="functionFetchPage(${currentPage +
-            1})">Next</a></li>`;
+          pageNumberList += `<li class="page-item"><a class="page-link text-dark" href="#" onclick="functionFetchPage(${currentPage +
+            1})">Next &#187;</a></li>`;
         }
 
         $(".pagination").html(pageNumberList);
@@ -110,7 +112,7 @@
       function functionFetchPage(pageNumber = 1) {
         $.ajax({
           type: "GET",
-          url: "http://localhost/api/users",
+          url: "http://localhost/users",
           dataType: "json",
           headers: { Authorization: "Bearer " + readCookie("auth_token") },
           contentType: "application/json",
@@ -132,19 +134,15 @@
       function logout(event) {
         event.preventDefault();
 
-        console.log();
         $.ajax({
           type: "DELETE",
           url: "http://localhost/auth",
           dataType: "json",
-          data: {
+          data: JSON.stringify({
             token: readCookie("auth_token")
-          },
+          }),
           success: function(response) {
-            console.log(response);
             document.cookie = "auth_token=" + "";
-
-            console.log(document.cookie);
 
             window.location = "/login.html";
           }

@@ -1,13 +1,15 @@
 USE knowledge_city_test;
 
-ALTER USER 'devuser'@'%' IDENTIFIED WITH mysql_native_password BY 'devpass';
+ALTER USER 'devuser' @'%' IDENTIFIED WITH mysql_native_password BY 'devpass';
 
+DROP TABLE IF EXISTS `api_users`;
+DROP TABLE IF EXISTS `students`;
 
 CREATE TABLE IF NOT EXISTS `api_users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `token` varchar(200),
+  `token` varchar(500),
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
@@ -27,13 +29,10 @@ TRUNCATE TABLE `students`;
 INSERT INTO
   `api_users` (`username`, `password`)
 VALUES
-  ('admin', 'admin'),
-  ('robin', 'robin'),
-  ('taylor', 'taylor'),
-  ('vivian', 'vivian'),
-  ('harry', 'harry'),
-  ('melinda', 'melinda'),
-  ('harley', 'harley');
+  (
+    'admin',
+    '$2y$10$8RBSDgDRiGOruGe21/aSf.KeIQVf7o5NHi4F/rN2V.rVkaTeNLEs.'
+  );
 
 INSERT INTO
   `students` (`first_name`, `last_name`, `group`, `status`)
